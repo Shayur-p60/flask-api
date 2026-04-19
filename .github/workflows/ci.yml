@@ -20,5 +20,5 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Check app imports
-        run: python -c "import app"
+      - name: Run tests
+        run: pytest

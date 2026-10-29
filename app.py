@@ -31,6 +31,20 @@ def add(a, b):
         "result": a + b
     })
 
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Not found", "status": 404}), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    logging.exception("Internal server error")
+    return jsonify({"error": "Internal server error", "status": 500}), 500
+
+
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
-    app.run(debug=True, host="0.0.0.0", port=port)
+    # Debug stays off unless FLASK_DEBUG is set. The Werkzeug debugger
+    # allows code execution, so never enable it on a public host.
+    debug = os.getenv("FLASK_DEBUG", "").strip().lower() in ("1", "true", "yes")
+    app.run(debug=debug, host="0.0.0.0", port=port)
